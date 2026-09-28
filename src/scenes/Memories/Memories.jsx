@@ -1,5 +1,7 @@
-function MemoriesScene() {
-  return <section className="scene scene--placeholder" aria-labelledby="memories-title"><div className="scene__content"><p className="eyebrow">Следующая глава</p><h1 id="memories-title">Воспоминания</h1><p className="scene__lead">Раздел готовится.</p></div></section>
+import ChapterScene from '../../components/ChapterScene/ChapterScene.jsx'
+
+function MemoriesScene({ onContinue }) {
+  return <ChapterScene id="memories" kicker="Вторая глава" title="Воспоминания" description="Здесь появятся моменты, к которым можно возвращаться." onContinue={onContinue} />
 }
 
 export default MemoriesScene

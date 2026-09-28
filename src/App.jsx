@@ -15,6 +15,7 @@ import FutureScene from './scenes/Future/Future.jsx'
 import FinaleScene from './scenes/Finale/Finale.jsx'
 
 export const SCENES = ['intro', 'welcome', 'story', 'memories', 'quiz', 'messages', 'letter', 'future', 'finale']
+const NEXT_SCENE = Object.fromEntries(SCENES.slice(0, -1).map((scene, index) => [scene, SCENES[index + 1]]))
 
 function App() {
   const [currentScene, setCurrentScene] = useState('intro')
@@ -30,6 +31,8 @@ function App() {
     }, 700)
   }
 
+  const continueCurrentScene = () => goToScene(NEXT_SCENE[currentScene])
+
   const renderScene = () => {
     switch (currentScene) {
       case 'intro':
@@ -37,17 +40,17 @@ function App() {
       case 'welcome':
         return <WelcomeScene onContinue={() => goToScene('story')} />
       case 'story':
-        return <StoryScene />
+        return <StoryScene onContinue={continueCurrentScene} />
       case 'memories':
-        return <MemoriesScene />
+        return <MemoriesScene onContinue={continueCurrentScene} />
       case 'quiz':
-        return <QuizScene />
+        return <QuizScene onContinue={continueCurrentScene} />
       case 'messages':
-        return <MessagesScene />
+        return <MessagesScene onContinue={continueCurrentScene} />
       case 'letter':
-        return <LetterScene />
+        return <LetterScene onContinue={continueCurrentScene} />
       case 'future':
-        return <FutureScene />
+        return <FutureScene onContinue={continueCurrentScene} />
       case 'finale':
         return <FinaleScene />
       default:
