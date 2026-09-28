@@ -1,9 +1,11 @@
 import { createPortal } from 'react-dom'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 
 function StoryEvent({ event, index }) {
   const [activeMedia, setActiveMedia] = useState(null)
+  const [cardHeight, setCardHeight] = useState(null)
+  const cardRef = useRef(null)
   const shouldReduceMotion = useReducedMotion()
   const media = Array.isArray(event.media) ? event.media : []
   const hasMedia = media.length > 0
@@ -18,6 +20,21 @@ function StoryEvent({ event, index }) {
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [activeMedia])
+
+  useEffect(() => {
+    const card = cardRef.current
+    if (!card || typeof ResizeObserver === 'undefined') return undefined
+
+    const updateCardHeight = () => {
+      setCardHeight(Math.round(card.getBoundingClientRect().height))
+    }
+
+    updateCardHeight()
+    const observer = new ResizeObserver(updateCardHeight)
+    observer.observe(card)
+
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     if (!activeMedia) return undefined
@@ -39,7 +56,7 @@ function StoryEvent({ event, index }) {
       transition={{ duration: 0.65, delay: shouldReduceMotion ? 0 : 0.04, ease: [0.22, 1, 0.36, 1] }}
     >
       <span className="story-event__node" aria-hidden="true" />
-      <div className="story-event__card">
+      <div ref={cardRef} className="story-event__card">
         <time className="story-event__date">{event.date}</time>
         <h2 className="story-event__title">{event.title}</h2>
         <p className="story-event__text">{event.text}</p>
@@ -48,6 +65,7 @@ function StoryEvent({ event, index }) {
       {hasMedia && (
         <div
           className={`story-event__media story-event__media--${media.length > 1 ? 'grid' : 'single'}`}
+          style={media.length === 1 && cardHeight ? { '--story-card-height': `${cardHeight}px` } : undefined}
           aria-label={`Медиа к событию: ${event.date}`}
         >
           {media.map((item, mediaIndex) => (

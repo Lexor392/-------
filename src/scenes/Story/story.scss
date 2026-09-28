@@ -202,16 +202,19 @@
 
 .story-event__media--single {
   display: block;
+  height: var(--story-card-height, auto);
+  min-height: 0;
+  align-self: stretch;
 }
 
 .story-event__media--single .story-media {
-  height: auto;
+  height: 100%;
   aspect-ratio: auto;
 }
 
 .story-event__media--single .story-media img,
 .story-event__media--single .story-media video {
-  height: auto;
+  height: 100%;
   aspect-ratio: auto;
   object-fit: contain;
 }
@@ -363,6 +366,17 @@
   .story-event--right .story-event__media {
     width: 100%;
     margin: 1rem 0 0;
+  }
+
+  .story-event__media--single {
+    height: auto;
+    align-self: auto;
+  }
+
+  .story-event__media--single .story-media,
+  .story-event__media--single .story-media img,
+  .story-event__media--single .story-media video {
+    height: auto;
   }
 
   .story-event__card {
