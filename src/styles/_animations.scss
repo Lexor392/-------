@@ -14,3 +14,9 @@
   from { opacity: 0; transform: translateY(0.75rem); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+@keyframes particle-drift {
+  0%, 100% { opacity: 0; transform: translate3d(0, 0.4rem, 0) scale(0.8); }
+  30%, 70% { opacity: 0.45; }
+  50% { opacity: 0.16; transform: translate3d(0.25rem, -0.8rem, 0) scale(1); }
+}

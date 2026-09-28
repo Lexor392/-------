@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import Button from './components/Button/Button.jsx'
+import CinematicBackground from './components/CinematicBackground/CinematicBackground.jsx'
 import MusicPlayer from './components/MusicPlayer/MusicPlayer.jsx'
 import PageTransition from './components/PageTransition/PageTransition.jsx'
 import ProgressIndicator from './components/ProgressIndicator/ProgressIndicator.jsx'
@@ -17,9 +18,16 @@ export const SCENES = ['intro', 'welcome', 'story', 'memories', 'quiz', 'message
 
 function App() {
   const [currentScene, setCurrentScene] = useState('intro')
+  const transitionLock = useRef(false)
 
   const goToScene = (scene) => {
-    if (SCENES.includes(scene)) setCurrentScene(scene)
+    if (!SCENES.includes(scene) || scene === currentScene || transitionLock.current) return
+
+    transitionLock.current = true
+    setCurrentScene(scene)
+    window.setTimeout(() => {
+      transitionLock.current = false
+    }, 700)
   }
 
   const renderScene = () => {
@@ -49,18 +57,21 @@ function App() {
 
   return (
     <main className="app-shell">
-      <div className="ambient ambient--top" aria-hidden="true" />
-      <div className="ambient ambient--bottom" aria-hidden="true" />
-      <header className="app-header">
-        <ProgressIndicator currentScene={currentScene} scenes={SCENES} />
-        <MusicPlayer />
-      </header>
-      <PageTransition sceneKey={currentScene}>{renderScene()}</PageTransition>
-      {currentScene !== 'intro' && currentScene !== 'welcome' && (
-        <nav className="scene-nav" aria-label="Навигация по разделам">
-          <Button variant="text" onClick={() => goToScene('welcome')}>В начало</Button>
-        </nav>
-      )}
+      <CinematicBackground />
+      <PageTransition sceneKey={currentScene}>
+        <>
+          <header className="app-header">
+            <ProgressIndicator currentScene={currentScene} scenes={SCENES} />
+            <MusicPlayer />
+          </header>
+          {renderScene()}
+          {currentScene !== 'intro' && currentScene !== 'welcome' && (
+            <nav className="scene-nav" aria-label="Навигация по разделам">
+              <Button variant="text" onClick={() => goToScene('welcome')}>В начало</Button>
+            </nav>
+          )}
+        </>
+      </PageTransition>
     </main>
   )
 }

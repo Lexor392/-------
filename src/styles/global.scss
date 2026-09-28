@@ -61,41 +61,75 @@ a:focus-visible {
   padding: max(1.25rem, env(safe-area-inset-top)) var(--page-gutter) max(1.25rem, env(safe-area-inset-bottom));
 }
 
-.app-shell::before {
-  position: fixed;
-  z-index: -1;
-  inset: -50%;
-  width: 200%;
-  height: 200%;
-  pointer-events: none;
-  content: '';
-  opacity: 0.055;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
-  animation: grain-shift 8s steps(2) infinite;
-}
-
-.ambient {
+.cinematic-background {
   position: fixed;
   z-index: -2;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 46%, rgba(142, 106, 128, 0.11), transparent 35rem),
+    linear-gradient(145deg, #08080d 0%, #0a0910 48%, #08080d 100%);
+}
+
+.cinematic-background__glow {
+  position: absolute;
   width: min(70vw, 32rem);
   aspect-ratio: 1;
   border-radius: 50%;
-  pointer-events: none;
   filter: blur(4rem);
   opacity: 0.16;
 }
 
-.ambient--top {
+.cinematic-background__glow--top {
   top: -18rem;
   right: -12rem;
   background: var(--color-accent-secondary);
 }
 
-.ambient--bottom {
+.cinematic-background__glow--bottom {
   bottom: -24rem;
   left: -16rem;
   background: var(--color-accent);
 }
+
+.cinematic-background__grain {
+  position: absolute;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+  animation: grain-shift 8s steps(2) infinite;
+}
+
+.cinematic-background__particles {
+  position: absolute;
+  inset: 0;
+}
+
+.cinematic-background__particles span {
+  position: absolute;
+  display: block;
+  width: 0.16rem;
+  height: 0.16rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0.8rem rgba(197, 139, 155, 0.65);
+  opacity: 0;
+  animation: particle-drift 8s ease-in-out infinite;
+}
+
+.cinematic-background__particles span:nth-child(1) { top: 21%; left: 12%; animation-delay: -1s; }
+.cinematic-background__particles span:nth-child(2) { top: 31%; left: 82%; animation-delay: -4s; }
+.cinematic-background__particles span:nth-child(3) { top: 66%; left: 18%; animation-delay: -6s; }
+.cinematic-background__particles span:nth-child(4) { top: 74%; left: 78%; animation-delay: -2s; }
+.cinematic-background__particles span:nth-child(5) { top: 14%; left: 62%; animation-delay: -5s; }
+.cinematic-background__particles span:nth-child(6) { top: 84%; left: 48%; animation-delay: -7s; }
+.cinematic-background__particles span:nth-child(7) { top: 44%; left: 7%; animation-delay: -3s; }
+.cinematic-background__particles span:nth-child(8) { top: 57%; left: 91%; animation-delay: -8s; }
+.cinematic-background__particles span:nth-child(9) { top: 12%; left: 36%; animation-delay: -6.5s; }
+.cinematic-background__particles span:nth-child(10) { top: 90%; left: 69%; animation-delay: -4.5s; }
 
 .app-header {
   @include mixins.content-width;
@@ -155,8 +189,8 @@ a:focus-visible {
 .page-transition {
   flex: 1;
   opacity: 0;
-  transform: translateY(0.7rem);
-  transition: opacity 450ms var(--ease-cinematic), transform 450ms var(--ease-cinematic);
+  transform: translateY(0.8rem);
+  transition: opacity 520ms var(--ease-cinematic), transform 520ms var(--ease-cinematic);
 }
 
 .page-transition.is-visible {
@@ -218,11 +252,6 @@ h1 {
   opacity: 0;
   transform: translateY(0.75rem);
   transition: opacity 550ms ease, transform 550ms var(--ease-cinematic);
-}
-
-.scene__action.is-visible,
-.scene__action:not(.is-visible) {
-  transition-delay: 0ms;
 }
 
 .scene__action.is-visible {
@@ -293,12 +322,14 @@ h1 {
 .intro-lines__line {
   display: block;
   opacity: 0;
+  filter: blur(3px);
   transform: translateY(0.55em);
-  transition: opacity 700ms ease, transform 900ms var(--ease-cinematic);
+  transition: opacity 700ms ease, filter 700ms ease, transform 900ms var(--ease-cinematic);
 }
 
 .intro-lines__line.is-visible {
   opacity: 1;
+  filter: blur(0);
   transform: translateY(0);
 }
 
@@ -390,6 +421,26 @@ h1 {
   }
 }
 
+@media (max-height: 620px) and (orientation: landscape) {
+  .scene {
+    min-height: calc(100dvh - 4rem);
+    padding-block: 2.5rem 1.5rem;
+  }
+
+  .intro-lines {
+    gap: 0.18em;
+    font-size: clamp(1.7rem, 6vw, 3.5rem);
+  }
+
+  .eyebrow {
+    margin-bottom: 0.8rem;
+  }
+
+  .scene__action {
+    margin-top: 1.4rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -401,5 +452,9 @@ h1 {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .cinematic-background__particles {
+    display: none;
   }
 }
