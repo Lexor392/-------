@@ -57,7 +57,7 @@ a:focus-visible {
   flex-direction: column;
   min-height: 100dvh;
   isolation: isolate;
-  overflow: hidden;
+  overflow-x: clip;
   padding: max(1.25rem, env(safe-area-inset-top)) var(--page-gutter) max(1.25rem, env(safe-area-inset-bottom));
 }
 

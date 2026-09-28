@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Button from './components/Button/Button.jsx'
 import CinematicBackground from './components/CinematicBackground/CinematicBackground.jsx'
 import MusicPlayer from './components/MusicPlayer/MusicPlayer.jsx'
@@ -20,6 +20,10 @@ function App() {
   const [currentScene, setCurrentScene] = useState('intro')
   const transitionLock = useRef(false)
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+  }, [currentScene])
+
   const goToScene = (scene) => {
     if (!SCENES.includes(scene) || scene === currentScene || transitionLock.current) return
 
@@ -37,7 +41,7 @@ function App() {
       case 'welcome':
         return <WelcomeScene onContinue={() => goToScene('story')} />
       case 'story':
-        return <StoryScene />
+        return <StoryScene onContinue={() => goToScene('memories')} />
       case 'memories':
         return <MemoriesScene />
       case 'quiz':
