@@ -408,67 +408,6 @@ h1 {
   color: var(--color-text);
 }
 
-.scene--chapter {
-  position: relative;
-  overflow: hidden;
-}
-
-.chapter-content {
-  max-width: 42rem;
-}
-
-.chapter-orbit {
-  position: absolute;
-  width: min(72vw, 30rem);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  opacity: 0.8;
-  pointer-events: none;
-}
-
-.chapter-orbit__ring,
-.chapter-orbit__point {
-  position: absolute;
-  display: block;
-  border-radius: 50%;
-}
-
-.chapter-orbit__ring {
-  inset: 0;
-  border: 1px solid rgba(197, 139, 155, 0.16);
-  animation: orbit-breathe 8s ease-in-out infinite;
-}
-
-.chapter-orbit__ring--inner {
-  inset: 18%;
-  border-color: rgba(142, 106, 128, 0.24);
-  animation-delay: -2.5s;
-}
-
-.chapter-orbit__point {
-  top: 7%;
-  left: 50%;
-  width: 0.4rem;
-  height: 0.4rem;
-  background: var(--color-accent);
-  box-shadow: 0 0 1.2rem rgba(197, 139, 155, 0.8);
-  transform-origin: 0 2850%;
-  animation: orbit-turn 18s linear infinite;
-}
-
-.scene--chapter .scene__content {
-  position: relative;
-  z-index: 1;
-}
-
-.scene--chapter h1 {
-  max-width: 13ch;
-}
-
-.scene--finale .chapter-orbit__ring {
-  border-color: rgba(197, 139, 155, 0.28);
-}
-
 .scene-nav {
   @include mixins.content-width;
   width: 100%;
@@ -536,8 +475,4 @@ h1 {
     display: none;
   }
 
-  .chapter-orbit__ring,
-  .chapter-orbit__point {
-    animation: none;
-  }
 }

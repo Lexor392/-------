@@ -1,7 +1,5 @@
-import ChapterScene from '../../components/ChapterScene/ChapterScene.jsx'
-
-function MessagesScene({ onContinue }) {
-  return <ChapterScene id="messages" kicker="Четвёртая глава" title="Сообщения" description="Здесь появятся короткие слова, которые хочется сохранить." onContinue={onContinue} />
+function MessagesScene() {
+  return <section className="scene scene--placeholder" aria-labelledby="messages-title"><div className="scene__content"><p className="eyebrow">Следующая глава</p><h1 id="messages-title">Сообщения</h1><p className="scene__lead">Раздел готовится.</p></div></section>
 }
 
 export default MessagesScene

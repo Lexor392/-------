@@ -1,7 +1,5 @@
-import ChapterScene from '../../components/ChapterScene/ChapterScene.jsx'
-
-function FutureScene({ onContinue }) {
-  return <ChapterScene id="future" kicker="Шестая глава" title="Вперёд" description="Здесь появится маленькая карта всего, что ещё впереди." onContinue={onContinue} />
+function FutureScene() {
+  return <section className="scene scene--placeholder" aria-labelledby="future-title"><div className="scene__content"><p className="eyebrow">Следующая глава</p><h1 id="future-title">Вперёд</h1><p className="scene__lead">Раздел готовится.</p></div></section>
 }
 
 export default FutureScene

@@ -1,7 +1,9 @@
-import ChapterScene from '../../components/ChapterScene/ChapterScene.jsx'
+function StoryScene() {
+  return <PlaceholderScene title="История" text="Здесь появится история." />
+}
 
-function StoryScene({ onContinue }) {
-  return <ChapterScene id="story" kicker="Первая глава" title="История" description="Здесь появится история, которую хочется перечитать." onContinue={onContinue} />
+function PlaceholderScene({ title, text }) {
+  return <section className="scene scene--placeholder" aria-labelledby="placeholder-title"><div className="scene__content"><p className="eyebrow">Следующая глава</p><h1 id="placeholder-title">{title}</h1><p className="scene__lead">{text}</p></div></section>
 }
 
 export default StoryScene

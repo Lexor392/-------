@@ -1,7 +1,5 @@
-import ChapterScene from '../../components/ChapterScene/ChapterScene.jsx'
-
 function FinaleScene() {
-  return <ChapterScene id="finale" kicker="Финальная глава" title="Продолжение следует" description="Финальная сцена появится здесь, когда придёт её время." isFinal />
+  return <section className="scene scene--placeholder" aria-labelledby="finale-title"><div className="scene__content"><p className="eyebrow">Финальная глава</p><h1 id="finale-title">Продолжение следует</h1><p className="scene__lead">Раздел готовится.</p></div></section>
 }
 
 export default FinaleScene
