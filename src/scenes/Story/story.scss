@@ -1,6 +1,6 @@
 @use '../../styles/mixins';
 
-.scene--story {
+.scene.scene--story {
   display: block;
   min-height: auto;
   overflow-anchor: none;
@@ -9,8 +9,30 @@
 }
 
 .story-intro {
-  padding-bottom: clamp(4rem, 10vw, 8rem);
+  position: relative;
+  isolation: isolate;
+  width: min(100%, 58rem);
+  margin-inline: auto;
+  margin-bottom: clamp(3rem, 7vw, 6rem);
+  padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.4rem, 5vw, 4rem) clamp(3rem, 7vw, 5rem);
+  border: 1px solid rgba(237, 233, 227, 0.1);
+  border-radius: 1.5rem;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(197, 139, 155, 0.12), transparent 52%),
+    linear-gradient(145deg, rgba(17, 17, 26, 0.68), rgba(17, 17, 26, 0.24));
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.14), inset 0 1px 0 rgba(237, 233, 227, 0.05);
   text-align: center;
+}
+
+.story-intro::after {
+  position: absolute;
+  z-index: -1;
+  right: 12%;
+  bottom: -1px;
+  left: 12%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(197, 139, 155, 0.6), transparent);
+  content: '';
 }
 
 .story-intro h1 {
@@ -26,9 +48,9 @@
 }
 
 .story-timeline {
-  @include mixins.content-width;
+  width: min(100%, 94rem);
+  margin-inline: auto;
   position: relative;
-  width: 100%;
 }
 
 .story-timeline__line {
@@ -68,10 +90,10 @@
 }
 
 .story-event__card {
-  width: min(100%, 28rem);
-  padding: 1.35rem 1.5rem 1.5rem;
+  width: min(100%, 36rem);
+  padding: 1.65rem 2rem 2rem;
   border: 1px solid rgba(237, 233, 227, 0.1);
-  border-radius: 0.25rem;
+  border-radius: 0.8rem;
   background: linear-gradient(135deg, rgba(17, 17, 26, 0.76), rgba(17, 17, 26, 0.38));
   box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.16);
 }
@@ -224,7 +246,7 @@
 }
 
 @media (max-width: 700px) {
-  .scene--story {
+  .scene.scene--story {
     padding-top: 4rem;
   }
 
