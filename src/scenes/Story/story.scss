@@ -164,16 +164,27 @@
 
 .story-event__media--grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-flow: dense;
+  grid-auto-rows: minmax(8rem, 10rem);
+}
+
+.story-event__media--grid .story-media--portrait {
+  grid-row: span 2;
 }
 
 .story-media {
   position: relative;
   display: block;
   width: 100%;
+  aspect-ratio: 16 / 10;
   overflow: hidden;
   border: 0;
   border-radius: 0.2rem;
   background: var(--color-surface);
+}
+
+.story-media--portrait {
+  aspect-ratio: 4 / 5;
 }
 
 .story-media--image {
@@ -185,8 +196,7 @@
 .story-media video {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 10;
-  max-height: 28rem;
+  height: 100%;
   object-fit: cover;
 }
 

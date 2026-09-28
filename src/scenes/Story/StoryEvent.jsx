@@ -62,10 +62,23 @@ function StoryEvent({ event, index }) {
 }
 
 function StoryMedia({ item, fallbackAlt, onImageClick }) {
+  const [detectedOrientation, setDetectedOrientation] = useState(null)
+  const orientation = item.orientation || detectedOrientation || 'landscape'
+  const orientationClass = `story-media--${orientation}`
+
+  const handleMediaLoad = (mediaElement) => {
+    const width = mediaElement.naturalWidth || mediaElement.videoWidth
+    const height = mediaElement.naturalHeight || mediaElement.videoHeight
+
+    if (!width || !height) return
+
+    setDetectedOrientation(height > width * 1.08 ? 'portrait' : 'landscape')
+  }
+
   if (item.type === 'image') {
     return (
-      <button className="story-media story-media--image" type="button" onClick={() => onImageClick(item)} aria-label={`Открыть изображение: ${item.alt || fallbackAlt}`}>
-        <img src={item.src} alt={item.alt || fallbackAlt} loading="lazy" />
+      <button className={`story-media story-media--image ${orientationClass}`} type="button" onClick={() => onImageClick(item)} aria-label={`Открыть изображение: ${item.alt || fallbackAlt}`}>
+        <img src={item.src} alt={item.alt || fallbackAlt} loading="lazy" onLoad={(event) => handleMediaLoad(event.currentTarget)} />
         <span className="story-media__zoom" aria-hidden="true">+</span>
       </button>
     )
@@ -73,7 +86,7 @@ function StoryMedia({ item, fallbackAlt, onImageClick }) {
 
   if (item.type === 'video') {
     return (
-      <video className="story-media story-media--video" controls playsInline preload="metadata" poster={item.poster}>
+      <video className={`story-media story-media--video ${orientationClass}`} controls playsInline preload="metadata" poster={item.poster} onLoadedMetadata={(event) => handleMediaLoad(event.currentTarget)}>
         <source src={item.src} />
         Ваш браузер не поддерживает воспроизведение видео.
       </video>
