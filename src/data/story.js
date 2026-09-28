@@ -72,7 +72,18 @@ const story = [
 Это был всего лишь Minecraft.
 
 Но мне нравилось, что этот мир мы создавали вместе.`,
-    media: []
+    media: [
+      {
+        type: "image",
+        src: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=85",
+        alt: "Игровой мир с подсветкой",
+      },
+      {
+        type: "image",
+        src: "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=1200&q=85",
+        alt: "Игровой контроллер",
+      },
+    ]
   },
 
   {
@@ -88,7 +99,13 @@ const story = [
 А 8 августа ты наконец сказала «да».
 
 И с этого дня наша история стала уже не просто историей двух людей, которые случайно познакомились в интернете.`,
-    media: []
+    media: [
+      {
+        type: "image",
+        src: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1200&q=85",
+        alt: "Тёплый момент начала отношений",
+      },
+    ]
   },
 
   {
@@ -168,7 +185,13 @@ const story = [
 И именно поэтому он для меня стал особенно приятным.
 
 Потому что это был подарок от тебя, который появился просто потому, что тебе захотелось меня порадовать.`,
-    media: []
+    media: [
+      {
+        type: "image",
+        src: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=1200&q=85",
+        alt: "Подарок, подготовленный с заботой",
+      },
+    ]
   },
 
   {
@@ -338,7 +361,18 @@ const story = [
 Потому что оно про нас.
 
 А для меня это гораздо важнее любых просмотров, лайков и рекомендаций.`,
-    media: []
+    media: [
+      {
+        type: "image",
+        src: "https://images.unsplash.com/photo-1511988617509-a57c8a288659?auto=format&fit=crop&w=1200&q=85",
+        alt: "Тёплый момент, который хочется сохранить",
+      },
+      {
+        type: "video",
+        src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+        poster: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1200&q=85",
+      },
+    ]
   },
 
   {

@@ -5,6 +5,7 @@ function StoryEvent({ event, index }) {
   const [activeImage, setActiveImage] = useState(null)
   const shouldReduceMotion = useReducedMotion()
   const media = Array.isArray(event.media) ? event.media : []
+  const hasMedia = media.length > 0
 
   useEffect(() => {
     if (!activeImage) return undefined
@@ -19,7 +20,7 @@ function StoryEvent({ event, index }) {
 
   return (
     <motion.article
-      className={`story-event ${index % 2 === 0 ? 'story-event--left' : 'story-event--right'}`}
+      className={`story-event ${index % 2 === 0 ? 'story-event--left' : 'story-event--right'}${hasMedia ? ' story-event--has-media' : ''}`}
       initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 28, scale: 0.98 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, amount: 0.18 }}
@@ -30,19 +31,23 @@ function StoryEvent({ event, index }) {
         <time className="story-event__date">{event.date}</time>
         <h2 className="story-event__title">{event.title}</h2>
         <p className="story-event__text">{event.text}</p>
-        {media.length > 0 && (
-          <div className={`story-event__media story-event__media--${media.length > 1 ? 'grid' : 'single'}`}>
-            {media.map((item, mediaIndex) => (
-              <StoryMedia
-                key={`${event.id}-media-${mediaIndex}`}
-                item={item}
-                fallbackAlt={event.title}
-                onImageClick={setActiveImage}
-              />
-            ))}
-          </div>
-        )}
       </div>
+
+      {hasMedia && (
+        <div
+          className={`story-event__media story-event__media--${media.length > 1 ? 'grid' : 'single'}`}
+          aria-label={`Медиа к событию: ${event.date}`}
+        >
+          {media.map((item, mediaIndex) => (
+            <StoryMedia
+              key={`${event.id}-media-${mediaIndex}`}
+              item={item}
+              fallbackAlt={event.title}
+              onImageClick={setActiveImage}
+            />
+          ))}
+        </div>
+      )}
 
       {activeImage && (
         <div className="story-lightbox" role="dialog" aria-modal="true" aria-label="Просмотр изображения" onClick={() => setActiveImage(null)}>

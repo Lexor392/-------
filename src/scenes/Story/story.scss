@@ -98,6 +98,10 @@
   box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.16);
 }
 
+.story-event--has-media {
+  align-items: start;
+}
+
 .story-event--left .story-event__card {
   grid-column: 1;
   justify-self: end;
@@ -108,6 +112,20 @@
   grid-column: 2;
   justify-self: start;
   margin-left: clamp(2rem, 5vw, 4rem);
+}
+
+.story-event--left .story-event__media {
+  grid-column: 2;
+  justify-self: start;
+  width: min(100%, 32rem);
+  margin: 0 0 0 clamp(2rem, 5vw, 4rem);
+}
+
+.story-event--right .story-event__media {
+  grid-column: 1;
+  justify-self: end;
+  width: min(100%, 32rem);
+  margin: 0 clamp(2rem, 5vw, 4rem) 0 0;
 }
 
 .story-event__date {
@@ -167,6 +185,7 @@
 .story-media video {
   display: block;
   width: 100%;
+  aspect-ratio: 16 / 10;
   max-height: 28rem;
   object-fit: cover;
 }
@@ -274,6 +293,12 @@
   .story-event--right .story-event__card {
     width: 100%;
     margin: 0;
+  }
+
+  .story-event--left .story-event__media,
+  .story-event--right .story-event__media {
+    width: 100%;
+    margin: 1rem 0 0;
   }
 
   .story-event__card {
