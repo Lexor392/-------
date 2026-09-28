@@ -9,7 +9,11 @@ function PageTransition({ sceneKey, children }) {
     return () => cancelAnimationFrame(frame)
   }, [sceneKey])
 
-  return <div className={`page-transition${visible ? ' is-visible' : ''}`}>{children}</div>
+  return (
+    <div className={`page-transition${visible ? ' is-visible' : ''}`} role="region" aria-live="polite">
+      {children}
+    </div>
+  )
 }
 
 export default PageTransition

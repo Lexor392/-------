@@ -22,9 +22,11 @@ function IntroScene({ onContinue }) {
             </span>
           ))}
         </h1>
-        <div className={`scene__action ${revealedLines === lines.length ? 'is-visible' : ''}`}>
-          <Button onClick={onContinue}>Продолжить</Button>
-        </div>
+        {revealedLines === lines.length && (
+          <div className="scene__action is-visible">
+            <Button onClick={onContinue}>Продолжить</Button>
+          </div>
+        )}
       </div>
     </section>
   )
