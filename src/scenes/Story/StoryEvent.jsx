@@ -1,22 +1,34 @@
+import { createPortal } from 'react-dom'
 import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 
 function StoryEvent({ event, index }) {
-  const [activeImage, setActiveImage] = useState(null)
+  const [activeMedia, setActiveMedia] = useState(null)
   const shouldReduceMotion = useReducedMotion()
   const media = Array.isArray(event.media) ? event.media : []
   const hasMedia = media.length > 0
 
   useEffect(() => {
-    if (!activeImage) return undefined
+    if (!activeMedia) return undefined
 
     const handleKeyDown = (keyboardEvent) => {
-      if (keyboardEvent.key === 'Escape') setActiveImage(null)
+      if (keyboardEvent.key === 'Escape') setActiveMedia(null)
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [activeImage])
+  }, [activeMedia])
+
+  useEffect(() => {
+    if (!activeMedia) return undefined
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [activeMedia])
 
   return (
     <motion.article
@@ -43,25 +55,24 @@ function StoryEvent({ event, index }) {
               key={`${event.id}-media-${mediaIndex}`}
               item={item}
               fallbackAlt={event.title}
-              onImageClick={setActiveImage}
+              onMediaClick={setActiveMedia}
             />
           ))}
         </div>
       )}
 
-      {activeImage && (
-        <div className="story-lightbox" role="dialog" aria-modal="true" aria-label="Просмотр изображения" onClick={() => setActiveImage(null)}>
-          <button className="story-lightbox__close" type="button" aria-label="Закрыть изображение" onClick={() => setActiveImage(null)}>×</button>
-          <div className="story-lightbox__content" onClick={(clickEvent) => clickEvent.stopPropagation()}>
-            <img src={activeImage.src} alt={activeImage.alt || event.title} />
-          </div>
-        </div>
+      {activeMedia && (
+        <StoryLightbox
+          media={activeMedia}
+          title={event.title}
+          onClose={() => setActiveMedia(null)}
+        />
       )}
     </motion.article>
   )
 }
 
-function StoryMedia({ item, fallbackAlt, onImageClick }) {
+function StoryMedia({ item, fallbackAlt, onMediaClick }) {
   const [detectedOrientation, setDetectedOrientation] = useState(null)
   const orientation = item.orientation || detectedOrientation || 'landscape'
   const orientationClass = `story-media--${orientation}`
@@ -77,8 +88,18 @@ function StoryMedia({ item, fallbackAlt, onImageClick }) {
 
   if (item.type === 'image') {
     return (
-      <button className={`story-media story-media--image ${orientationClass}`} type="button" onClick={() => onImageClick(item)} aria-label={`Открыть изображение: ${item.alt || fallbackAlt}`}>
-        <img src={item.src} alt={item.alt || fallbackAlt} loading="lazy" onLoad={(event) => handleMediaLoad(event.currentTarget)} />
+      <button
+        className={`story-media story-media--image ${orientationClass}`}
+        type="button"
+        onClick={() => onMediaClick(item)}
+        aria-label={`Открыть изображение: ${item.alt || fallbackAlt}`}
+      >
+        <img
+          src={item.src}
+          alt={item.alt || fallbackAlt}
+          loading="lazy"
+          onLoad={(event) => handleMediaLoad(event.currentTarget)}
+        />
         <span className="story-media__zoom" aria-hidden="true">+</span>
       </button>
     )
@@ -86,14 +107,63 @@ function StoryMedia({ item, fallbackAlt, onImageClick }) {
 
   if (item.type === 'video') {
     return (
-      <video className={`story-media story-media--video ${orientationClass}`} controls playsInline preload="metadata" poster={item.poster} onLoadedMetadata={(event) => handleMediaLoad(event.currentTarget)}>
-        <source src={item.src} />
-        Ваш браузер не поддерживает воспроизведение видео.
-      </video>
+      <div className={`story-media story-media--video ${orientationClass}`}>
+        <video
+          controls
+          playsInline
+          preload="metadata"
+          poster={item.poster}
+          onLoadedMetadata={(event) => handleMediaLoad(event.currentTarget)}
+          aria-label={item.alt || fallbackAlt}
+        >
+          <source src={item.src} />
+          Ваш браузер не поддерживает воспроизведение видео.
+        </video>
+        <button
+          className="story-media__fullscreen"
+          type="button"
+          onClick={() => onMediaClick(item)}
+          aria-label={`Открыть видео на весь экран: ${item.alt || fallbackAlt}`}
+        >
+          ⛶
+        </button>
+      </div>
     )
   }
 
   return null
+}
+
+function StoryLightbox({ media, title, onClose }) {
+  return createPortal(
+    <div
+      className="story-lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-label={media.type === 'video' ? 'Просмотр видео' : 'Просмотр изображения'}
+      onClick={onClose}
+    >
+      <button
+        className="story-lightbox__close"
+        type="button"
+        aria-label="Закрыть просмотр"
+        onClick={onClose}
+      >
+        ×
+      </button>
+      <div className="story-lightbox__content" onClick={(event) => event.stopPropagation()}>
+        {media.type === 'video' ? (
+          <video controls autoPlay playsInline preload="auto" poster={media.poster}>
+            <source src={media.src} />
+            Ваш браузер не поддерживает воспроизведение видео.
+          </video>
+        ) : (
+          <img src={media.src} alt={media.alt || title} />
+        )}
+      </div>
+    </div>,
+    document.body,
+  )
 }
 
 export default StoryEvent
