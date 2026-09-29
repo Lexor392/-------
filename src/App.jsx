@@ -9,12 +9,11 @@ import IntroScene from './scenes/Intro/Intro.jsx'
 import WelcomeScene from './scenes/Welcome/Welcome.jsx'
 import StoryScene from './scenes/Story/Story.jsx'
 import QuizScene from './scenes/Quiz/Quiz.jsx'
-import MessagesScene from './scenes/Messages/Messages.jsx'
 import LetterScene from './scenes/Letter/Letter.jsx'
 import FutureScene from './scenes/Future/Future.jsx'
 import FinaleScene from './scenes/Finale/Finale.jsx'
 
-export const SCENES = ['intro', 'welcome', 'story', 'quiz', 'messages', 'letter', 'future', 'finale']
+export const SCENES = ['intro', 'welcome', 'story', 'quiz', 'letter', 'future', 'finale']
 
 function App() {
   const [currentScene, setCurrentScene] = useState('intro')
@@ -43,11 +42,9 @@ function App() {
       case 'story':
         return <StoryScene onContinue={() => goToScene('quiz')} />
       case 'quiz':
-        return <QuizScene onBack={() => goToScene('story')} onContinue={() => goToScene('messages')} />
-      case 'messages':
-        return <MessagesScene />
+        return <QuizScene onBack={() => goToScene('story')} onContinue={() => goToScene('letter')} />
       case 'letter':
-        return <LetterScene />
+        return <LetterScene onBack={() => goToScene('quiz')} onContinue={() => goToScene('future')} />
       case 'future':
         return <FutureScene />
       case 'finale':
