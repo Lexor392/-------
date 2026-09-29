@@ -45,7 +45,7 @@
 
 .letter-opening h1,
 .letter-reading h1 {
-  max-width: 12ch;
+  max-width: 24ch;
   margin-bottom: 1.4rem;
 }
 
@@ -117,7 +117,7 @@
 
 .letter-reading__header h1 {
   margin-inline: auto;
-  font-size: clamp(2.7rem, 8vw, 5.8rem);
+  font-size: clamp(2.7rem, 8vw, 4rem);
   line-height: 0.96;
 }
 
@@ -133,9 +133,9 @@
 .letter-divider::after {
   position: absolute;
   top: 50%;
-  left: 0;
+  left: -5px;
   padding-right: 0.7rem;
-  background: var(--color-bg);
+  background: rgba(197, 139, 155, 0);
   color: var(--color-accent);
   content: '✦';
   font-size: 0.7rem;

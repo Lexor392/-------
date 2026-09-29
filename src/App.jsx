@@ -10,10 +10,9 @@ import WelcomeScene from './scenes/Welcome/Welcome.jsx'
 import StoryScene from './scenes/Story/Story.jsx'
 import QuizScene from './scenes/Quiz/Quiz.jsx'
 import LetterScene from './scenes/Letter/Letter.jsx'
-import FutureScene from './scenes/Future/Future.jsx'
 import FinaleScene from './scenes/Finale/Finale.jsx'
 
-export const SCENES = ['intro', 'welcome', 'story', 'quiz', 'letter', 'future', 'finale']
+export const SCENES = ['intro', 'welcome', 'story', 'quiz', 'letter', 'finale']
 
 function App() {
   const [currentScene, setCurrentScene] = useState('intro')
@@ -44,11 +43,9 @@ function App() {
       case 'quiz':
         return <QuizScene onBack={() => goToScene('story')} onContinue={() => goToScene('letter')} />
       case 'letter':
-        return <LetterScene onBack={() => goToScene('quiz')} onContinue={() => goToScene('future')} />
-      case 'future':
-        return <FutureScene />
+        return <LetterScene onBack={() => goToScene('quiz')} onContinue={() => goToScene('finale')} />
       case 'finale':
-        return <FinaleScene />
+        return <FinaleScene onRestart={() => goToScene('intro')} />
       default:
         return <IntroScene onContinue={() => goToScene('welcome')} />
     }
@@ -60,12 +57,12 @@ function App() {
       <CursorEffects />
       <header className="app-header">
         <ProgressIndicator currentScene={currentScene} scenes={SCENES} />
-        <MusicPlayer />
+        <MusicPlayer startSignal={currentScene === 'finale' ? 'finale' : ''} />
       </header>
       <PageTransition sceneKey={currentScene}>
         <>
           {renderScene()}
-          {currentScene !== 'intro' && currentScene !== 'welcome' && (
+          {currentScene !== 'intro' && currentScene !== 'welcome' && currentScene !== 'finale' && (
             <nav className="scene-nav" aria-label="Навигация по разделам">
               <Button variant="text" onClick={() => goToScene('welcome')}>В начало</Button>
             </nav>

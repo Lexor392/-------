@@ -20,3 +20,33 @@
   30%, 70% { opacity: 0.45; }
   50% { opacity: 0.16; transform: translate3d(0.25rem, -0.8rem, 0) scale(1); }
 }
+
+@keyframes ambient-shift {
+  0%, 100% { transform: translate3d(-2%, -1%, 0) scale(1); opacity: 0.72; }
+  50% { transform: translate3d(2%, 1.5%, 0) scale(1.08); opacity: 1; }
+}
+
+@keyframes heart-float {
+  0% { opacity: 0; transform: translate3d(0, 1.5rem, 0) rotate(-8deg) scale(0.7); }
+  18% { opacity: 0.52; }
+  50% { opacity: 0.22; transform: translate3d(0.7rem, -1.8rem, 0) rotate(8deg) scale(1); }
+  82% { opacity: 0.38; }
+  100% { opacity: 0; transform: translate3d(-0.8rem, -4rem, 0) rotate(-4deg) scale(0.82); }
+}
+
+@keyframes border-shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes cursor-heart-rise {
+  0% { opacity: 0; transform: translate(-50%, -30%) rotate(var(--heart-rotation)) scale(0.5); }
+  18% { opacity: 0.9; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--heart-drift)), -3.4rem) rotate(calc(var(--heart-rotation) + 18deg)) scale(0.15); }
+}
+
+@keyframes cursor-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.85); }
+  50% { transform: translate(-50%, -50%) scale(1.1); }
+}
+

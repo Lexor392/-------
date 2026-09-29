@@ -36,6 +36,33 @@ function QuizIntro({ onStart, onBack }) {
   )
 }
 
+function QuizMedia({ media, question }) {
+  const supportedMedia = media?.filter((item) => item.type === 'image' && item.src)
+
+  if (!supportedMedia?.length) return null
+
+  return (
+    <div className="quiz-media" aria-label="Фото к этому моменту">
+      {supportedMedia.map((item) => (
+        <figure className="quiz-media__item" key={item.src}>
+          <div className="quiz-media__frame">
+            <img
+              src={item.src}
+              alt={item.alt || `Фото к вопросу: ${question.question}`}
+              loading="lazy"
+              onError={(event) => {
+                event.currentTarget.closest('.quiz-media__item')?.classList.add('is-broken')
+              }}
+            />
+            <span className="quiz-media__fallback" role="img" aria-label="Фото недоступно">Фото не загрузилось</span>
+          </div>
+          {item.caption && <figcaption>{item.caption}</figcaption>}
+        </figure>
+      ))}
+    </div>
+  )
+}
+
 function QuizQuestion({ question, questionIndex, total, selectedAnswer, answered, onAnswer, onNext }) {
   const selectedOption = question.options.find((option) => option.id === selectedAnswer)
   const correctOption = question.options.find((option) => option.id === question.correctAnswer)
@@ -90,6 +117,7 @@ function QuizQuestion({ question, questionIndex, total, selectedAnswer, answered
           <p className="quiz-feedback__label">{isCorrect ? 'Правильно ♥' : 'Почти ♥'}</p>
           <h3>{isCorrect ? 'Ты помнишь!' : `Правильный ответ: ${correctOption?.text}`}</h3>
           <p>{question.explanation}</p>
+          <QuizMedia media={question.media} question={question} />
           <p className="quiz-feedback__chosen">Твой ответ: {selectedOption?.text}</p>
           <Button variant="secondary" onClick={onNext}>
             {questionIndex === total - 1 ? 'Узнать результат →' : 'Следующий вопрос →'}

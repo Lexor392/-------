@@ -1,0 +1,160 @@
+.scene--finale {
+  position: relative;
+  min-height: calc(100dvh - 5rem);
+  overflow: clip;
+  padding-block: clamp(3rem, 10vh, 7rem);
+}
+
+.finale__content {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 46rem);
+  margin-inline: auto;
+}
+
+.finale__halo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(94vw, 43rem);
+  aspect-ratio: 1;
+  border: 1px solid rgba(197, 139, 155, 0.12);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(197, 139, 155, 0.13), rgba(142, 106, 128, 0.045) 42%, transparent 70%);
+  box-shadow: 0 0 5rem rgba(197, 139, 155, 0.08);
+  opacity: 0.52;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.96);
+  animation: finale-halo-breathe 9s ease-in-out infinite;
+}
+
+.finale__halo::before,
+.finale__halo::after {
+  position: absolute;
+  border: 1px solid rgba(237, 233, 227, 0.08);
+  border-radius: 50%;
+  content: '';
+}
+
+.finale__halo::before {
+  inset: 10%;
+}
+
+.finale__halo::after {
+  inset: 25%;
+  background: radial-gradient(circle, rgba(237, 233, 227, 0.055), transparent 70%);
+}
+
+.finale__reveal {
+  opacity: 0;
+  transform: translateY(1rem);
+  transition: opacity 1s ease, transform 1.15s var(--ease-cinematic);
+}
+
+.finale__reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.finale__reveal--eyebrow {
+  margin-bottom: clamp(1.5rem, 4vh, 2.4rem);
+  transition-delay: 40ms;
+}
+
+.finale__reveal--title {
+  max-width: 25ch;
+  margin-bottom: clamp(2.2rem, 6vh, 4rem);
+  color: var(--color-text);
+  font-size: clamp(2.8rem, 10vw, 4.2rem);
+  line-height: 0.95;
+  transition-delay: 100ms;
+}
+
+.finale__message {
+  max-width: 35rem;
+  margin-inline: auto;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.6vw, 1.45rem);
+  line-height: 1.65;
+  transition-delay: 120ms;
+}
+
+.finale__message p {
+  margin-bottom: 1.35rem;
+  font-family: "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+}
+
+.finale__message p:last-child {
+  margin-bottom: 0;
+}
+
+.finale__last-line {
+  max-width: 30rem;
+  margin: clamp(2.8rem, 7vh, 4.5rem) auto 0;
+  color: var(--color-accent);
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 3.7vw, 2rem);
+  font-style: italic;
+  line-height: 1.35;
+  transition-delay: 170ms;
+}
+
+.finale__divider {
+  display: block;
+  width: min(100%, 15rem);
+  height: 1px;
+  margin: clamp(2.2rem, 5vh, 3.5rem) auto 0;
+  background: linear-gradient(90deg, transparent, rgba(197, 139, 155, 0.75), transparent);
+  transition-delay: 220ms;
+}
+
+.finale__restart {
+  margin-top: 1.15rem;
+  transition-delay: 250ms;
+}
+
+.finale__restart .button {
+  color: rgba(237, 233, 227, 0.58);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+}
+
+.finale__restart .button:hover {
+  color: var(--color-text);
+}
+
+@keyframes finale-halo-breathe {
+  0%, 100% { opacity: 0.42; transform: translate(-50%, -50%) scale(0.96); }
+  50% { opacity: 0.62; transform: translate(-50%, -50%) scale(1.015); }
+}
+
+@media (max-width: 599px) {
+  .scene--finale {
+    min-height: calc(100dvh - 5rem);
+    padding-block: 3.5rem 4rem;
+  }
+
+  .finale__halo {
+    width: 125vw;
+  }
+
+  .finale__message {
+    max-width: 28rem;
+    font-size: 1.08rem;
+    line-height: 1.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .finale__halo {
+    animation: none;
+  }
+
+  .finale__reveal,
+  .finale__reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

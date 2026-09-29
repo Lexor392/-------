@@ -27,7 +27,7 @@
 
 .quiz-panel h1,
 .quiz-result__content h1 {
-  max-width: 11ch;
+  max-width: 14ch;
   margin-bottom: 1.25rem;
 }
 
@@ -204,6 +204,80 @@
   font-size: 0.78rem;
 }
 
+.quiz-media {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 0.75rem;
+  margin: 1.35rem 0 1.15rem;
+}
+
+.quiz-media__item {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(197, 139, 155, 0.3);
+  border-radius: 0.8rem;
+  background: rgba(8, 8, 13, 0.62);
+  box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.18);
+  animation: quiz-media-in 550ms var(--ease-cinematic) both;
+}
+
+.quiz-media__frame {
+  position: relative;
+  display: grid;
+  min-height: 11rem;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(197, 139, 155, 0.13), transparent 62%),
+    var(--color-bg);
+}
+
+.quiz-media__frame::after {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(237, 233, 227, 0.05);
+  border-radius: inherit;
+  content: '';
+  pointer-events: none;
+}
+
+.quiz-media img {
+  display: block;
+  width: 100%;
+  max-height: min(42vh, 25rem);
+  object-fit: contain;
+  transition: transform 700ms var(--ease-cinematic), opacity 250ms ease;
+}
+
+.quiz-media__item:hover img {
+  transform: scale(1.025);
+}
+
+.quiz-media figcaption {
+  padding: 0.7rem 0.85rem 0.8rem;
+  border-top: 1px solid rgba(197, 139, 155, 0.18);
+  color: var(--color-muted);
+  font-size: 0.72rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.quiz-media__fallback {
+  display: none;
+  padding: 1rem;
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+
+.quiz-media__item.is-broken img {
+  display: none;
+}
+
+.quiz-media__item.is-broken .quiz-media__fallback {
+  display: block;
+}
+
 .quiz-feedback .button {
   min-height: 2.85rem;
 }
@@ -325,6 +399,11 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes quiz-media-in {
+  from { opacity: 0; transform: translateY(0.45rem) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 @keyframes score-ring-in {
   from { opacity: 0; transform: scale(0.82) rotate(-20deg); }
   to { opacity: 1; transform: scale(1) rotate(0); }
@@ -359,6 +438,14 @@
     padding-inline: 0.2rem;
   }
 
+  .quiz-media {
+    grid-template-columns: 1fr;
+  }
+
+  .quiz-media__frame {
+    min-height: 9rem;
+  }
+
   .quiz-result__stats {
     gap: 0.5rem;
   }
@@ -371,7 +458,8 @@
 @media (prefers-reduced-motion: reduce) {
   .quiz-panel,
   .quiz-feedback,
-  .quiz-score {
+  .quiz-score,
+  .quiz-media__item {
     animation: none;
   }
 }

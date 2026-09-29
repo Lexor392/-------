@@ -1,25 +1,23 @@
 import { createPortal } from 'react-dom'
 import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
+import AnimatedLetters from '../../components/AnimatedLetters/AnimatedLetters.jsx'
+import Icon from '../../components/Icon/Icon.jsx'
 
 function StoryEvent({ event, index }) {
-  const [activeMedia, setActiveMedia] = useState(null)
+  const [activeMediaIndex, setActiveMediaIndex] = useState(null)
   const [cardHeight, setCardHeight] = useState(null)
+  const [mediaOrientations, setMediaOrientations] = useState({})
   const cardRef = useRef(null)
   const shouldReduceMotion = useReducedMotion()
   const media = Array.isArray(event.media) ? event.media : []
   const hasMedia = media.length > 0
-
-  useEffect(() => {
-    if (!activeMedia) return undefined
-
-    const handleKeyDown = (keyboardEvent) => {
-      if (keyboardEvent.key === 'Escape') setActiveMedia(null)
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [activeMedia])
+  const activeMedia = activeMediaIndex === null ? null : media[activeMediaIndex]
+  const isHorizontalPhotoGallery =
+    media.length > 1 &&
+    media.length <= 3 &&
+    media.every((item) => item.type === 'image') &&
+    media.every((item, mediaIndex) => (item.orientation || mediaOrientations[mediaIndex]) === 'landscape')
 
   useEffect(() => {
     const card = cardRef.current
@@ -37,7 +35,29 @@ function StoryEvent({ event, index }) {
   }, [])
 
   useEffect(() => {
-    if (!activeMedia) return undefined
+    if (activeMediaIndex === null) return undefined
+
+    const handleKeyDown = (keyboardEvent) => {
+      if (keyboardEvent.key === 'Escape') setActiveMediaIndex(null)
+      if (media.length < 2) return
+
+      if (keyboardEvent.key === 'ArrowRight') {
+        keyboardEvent.preventDefault()
+        setActiveMediaIndex((currentIndex) => (currentIndex + 1) % media.length)
+      }
+
+      if (keyboardEvent.key === 'ArrowLeft') {
+        keyboardEvent.preventDefault()
+        setActiveMediaIndex((currentIndex) => (currentIndex - 1 + media.length) % media.length)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [activeMediaIndex, media.length])
+
+  useEffect(() => {
+    if (activeMediaIndex === null) return undefined
 
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
@@ -45,7 +65,7 @@ function StoryEvent({ event, index }) {
     return () => {
       document.body.style.overflow = previousOverflow
     }
-  }, [activeMedia])
+  }, [activeMediaIndex])
 
   return (
     <motion.article
@@ -58,14 +78,14 @@ function StoryEvent({ event, index }) {
       <span className="story-event__node" aria-hidden="true" />
       <div ref={cardRef} className="story-event__card">
         <time className="story-event__date">{event.date}</time>
-        <h2 className="story-event__title">{event.title}</h2>
-        <p className="story-event__text">{event.text}</p>
+        <h2 className="story-event__title"><AnimatedLetters text={event.title} /></h2>
+        <p className="story-event__text"><AnimatedLetters text={event.text} /></p>
       </div>
 
       {hasMedia && (
         <div
-          className={`story-event__media story-event__media--${media.length > 1 ? 'grid' : 'single'}`}
-          style={media.length === 1 && cardHeight ? { '--story-card-height': `${cardHeight}px` } : undefined}
+          className={`story-event__media story-event__media--${media.length > 1 ? 'grid' : 'single'}${isHorizontalPhotoGallery ? ` story-event__media--${media.length}-horizontal` : ''}`}
+          style={cardHeight ? { '--story-card-height': `${cardHeight}px` } : undefined}
           aria-label={`Медиа к событию: ${event.date}`}
         >
           {media.map((item, mediaIndex) => (
@@ -73,7 +93,8 @@ function StoryEvent({ event, index }) {
               key={`${event.id}-media-${mediaIndex}`}
               item={item}
               fallbackAlt={event.title}
-              onMediaClick={setActiveMedia}
+              onMediaClick={() => setActiveMediaIndex(mediaIndex)}
+              onOrientationChange={(orientation) => setMediaOrientations((current) => ({ ...current, [mediaIndex]: orientation }))}
             />
           ))}
         </div>
@@ -81,19 +102,51 @@ function StoryEvent({ event, index }) {
 
       {activeMedia && (
         <StoryLightbox
+          mediaItems={media}
+          activeIndex={activeMediaIndex}
           media={activeMedia}
           title={event.title}
-          onClose={() => setActiveMedia(null)}
+          onClose={() => setActiveMediaIndex(null)}
+          onChange={setActiveMediaIndex}
         />
       )}
     </motion.article>
   )
 }
 
-function StoryMedia({ item, fallbackAlt, onMediaClick }) {
+function StoryMedia({ item, fallbackAlt, onMediaClick, onOrientationChange }) {
   const [detectedOrientation, setDetectedOrientation] = useState(null)
+  const videoRef = useRef(null)
   const orientation = item.orientation || detectedOrientation || 'landscape'
   const orientationClass = `story-media--${orientation}`
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return undefined
+
+    video.muted = true
+
+    if (typeof IntersectionObserver === 'undefined') {
+      video.play().catch(() => {})
+      return () => video.pause()
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      video.muted = true
+
+      if (entry.isIntersecting) {
+        video.play().catch(() => {})
+      } else {
+        video.pause()
+      }
+    }, { threshold: 0.35 })
+
+    observer.observe(video)
+    return () => {
+      observer.disconnect()
+      video.pause()
+    }
+  }, [item.src])
 
   const handleMediaLoad = (mediaElement) => {
     const width = mediaElement.naturalWidth || mediaElement.videoWidth
@@ -101,7 +154,9 @@ function StoryMedia({ item, fallbackAlt, onMediaClick }) {
 
     if (!width || !height) return
 
-    setDetectedOrientation(height > width * 1.08 ? 'portrait' : 'landscape')
+    const nextOrientation = height > width * 1.08 ? 'portrait' : 'landscape'
+    setDetectedOrientation(nextOrientation)
+    onOrientationChange?.(nextOrientation)
   }
 
   if (item.type === 'image') {
@@ -118,7 +173,6 @@ function StoryMedia({ item, fallbackAlt, onMediaClick }) {
           loading="lazy"
           onLoad={(event) => handleMediaLoad(event.currentTarget)}
         />
-        <span className="story-media__zoom" aria-hidden="true">+</span>
       </button>
     )
   }
@@ -127,8 +181,10 @@ function StoryMedia({ item, fallbackAlt, onMediaClick }) {
     return (
       <div className={`story-media story-media--video ${orientationClass}`}>
         <video
-          controls
+          ref={videoRef}
           playsInline
+          muted
+          loop
           preload="metadata"
           poster={item.poster}
           onLoadedMetadata={(event) => handleMediaLoad(event.currentTarget)}
@@ -143,7 +199,7 @@ function StoryMedia({ item, fallbackAlt, onMediaClick }) {
           onClick={() => onMediaClick(item)}
           aria-label={`Открыть видео на весь экран: ${item.alt || fallbackAlt}`}
         >
-          ⛶
+          <Icon name="fullscreen" />
         </button>
       </div>
     )
@@ -152,7 +208,19 @@ function StoryMedia({ item, fallbackAlt, onMediaClick }) {
   return null
 }
 
-function StoryLightbox({ media, title, onClose }) {
+function StoryLightbox({ mediaItems, activeIndex, media, title, onClose, onChange }) {
+  const hasNavigation = mediaItems.length > 1
+
+  const showPrevious = (event) => {
+    event.stopPropagation()
+    onChange((activeIndex - 1 + mediaItems.length) % mediaItems.length)
+  }
+
+  const showNext = (event) => {
+    event.stopPropagation()
+    onChange((activeIndex + 1) % mediaItems.length)
+  }
+
   return createPortal(
     <div
       className="story-lightbox"
@@ -167,11 +235,31 @@ function StoryLightbox({ media, title, onClose }) {
         aria-label="Закрыть просмотр"
         onClick={onClose}
       >
-        ×
+        <Icon name="close" />
       </button>
+      {hasNavigation && (
+        <>
+          <button
+            className="story-lightbox__arrow story-lightbox__arrow--previous"
+            type="button"
+            aria-label="Предыдущее медиа"
+            onClick={showPrevious}
+          >
+            <Icon name="chevron_left" />
+          </button>
+          <button
+            className="story-lightbox__arrow story-lightbox__arrow--next"
+            type="button"
+            aria-label="Следующее медиа"
+            onClick={showNext}
+          >
+            <Icon name="chevron_right" />
+          </button>
+        </>
+      )}
       <div className="story-lightbox__content" onClick={(event) => event.stopPropagation()}>
         {media.type === 'video' ? (
-          <video controls autoPlay playsInline preload="auto" poster={media.poster}>
+          <video controls autoPlay muted loop playsInline preload="auto" poster={media.poster}>
             <source src={media.src} />
             Ваш браузер не поддерживает воспроизведение видео.
           </video>
