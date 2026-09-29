@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import AnimatedLetters from '../../components/AnimatedLetters/AnimatedLetters.jsx'
 import Button from '../../components/Button/Button.jsx'
 import story from '../../data/story.js'
 import StoryEvent from './StoryEvent.jsx'
@@ -13,8 +14,8 @@ function StoryScene({ onContinue }) {
     <section className="scene scene--story" aria-labelledby="story-title">
       <header className="story-intro scene__content">
         <p className="eyebrow">Наша история</p>
-        <h1 id="story-title">С того самого сообщения</h1>
-        <p className="scene__lead">Иногда всё начинается с нескольких совершенно обычных слов.</p>
+        <h1 id="story-title"><AnimatedLetters text="С того самого сообщения" /></h1>
+        <p className="scene__lead"><AnimatedLetters text="Иногда всё начинается с нескольких совершенно обычных слов." /></p>
         <p className="story-intro__meta">{story.length} событий · август — сентябрь 2026</p>
       </header>
 

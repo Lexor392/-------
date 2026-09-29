@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
+    "canvas-confetti": "^1.9.4",
     "motion": "^13.4.4",
     "react": "latest",
     "react-dom": "latest",
